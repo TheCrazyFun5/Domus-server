@@ -4,12 +4,15 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "type": "commonjs",
-  "main": "index.js",
+  "type": "module",
+  "bin": "index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "aedes": "^0.51.3",
+    "express": "^5.1.0",
+    "mqtt": "^5.13.1",
+    "net": "^1.0.2"
   }
 }
