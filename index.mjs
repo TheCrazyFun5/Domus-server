@@ -1,9 +1,9 @@
-// import "./mqttServer.mjs";
 import express from "express";
-import mqtt from "mqtt";
+import logger from "./module/logger.mjs";
+import { startMQTTServer } from "./module/mqttServer.mjs";
 import installer from "./install/install.mjs";
-import app from "./app.mjs";
-import { exists } from "./module/configLoader.mjs";
+import { app, MQTTconnect } from "./app.mjs";
+import { exists, getMainConfig } from "./module/configLoader.mjs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -13,18 +13,32 @@ const __dirname = path.dirname(__filename);
 
 let server = null;
 let connections = new Set();
-function startApp() {
+let serverSettings;
+let config = null;
+
+async function startApp() {
   const appStart = express();
   appStart.use(express.json());
   if (!exists(path.join(__dirname, "config.json"))) {
-    console.log("🛠 Конфиг не найден, запускаем установщик");
+    serverSettings = {
+      ip: "0.0.0.0",
+      port: 3000,
+    };
+    logger("🛠 Конфиг не найден, запускаем установщик", "Installer");
     appStart.use(installer(restartApp));
   } else {
+    config = getMainConfig();
+    serverSettings = config.Server;
+    if (config.MQTT.builtIn) {
+      logger("Запускаем встроенный MQTT", "App");
+      await startMQTTServer(config.MQTT);
+    }
+    MQTTconnect();
     appStart.use(app);
   }
 
-  server = appStart.listen(3000, () => {
-    console.log("🚀 Сервер запущен на http://localhost:3000");
+  server = appStart.listen(serverSettings.port, serverSettings.ip, () => {
+    logger(`🚀 Сервер запущен на http://localhost:${serverSettings.port}`);
   });
   server.on("connection", (socket) => {
     connections.add(socket);
@@ -33,14 +47,14 @@ function startApp() {
 }
 
 function restartApp() {
-  console.log("Перезапуск сервера...");
+  logger("Перезапуск сервера...", "App");
   for (const socket of connections) {
     socket.destroy();
   }
   connections.clear();
   if (server) {
     server.close(() => {
-      console.log("Старый сервер остановлен");
+      logger("🔴 Старый сервер остановлен", "App");
       setTimeout(() => startApp(), 500);
     });
   }

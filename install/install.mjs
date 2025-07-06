@@ -10,19 +10,14 @@ export default function installer(callBack) {
   installerRouter.use(express.static(path.join(__dirname, "dist")));
   installerRouter.post("/setup", async (req, res) => {
     try {
-      let defaultConfig = {};
-      defaultConfig.Mqtt = {
-        login: req.body.login,
-        pass: req.body.pass,
-      };
-      createConfog(path.join(__dirname, "..", "config.json"), defaultConfig);
+      createConfog(path.join(__dirname, "..", "config.json"), req.body);
+      res.status(200).json({ success: true });
       callBack();
-      res.json({ success: true });
     } catch (err) {
       res.json({ success: false });
     }
   });
-  installerRouter.use("/", (req, res) => {
+  installerRouter.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "dist", "index.html"));
   });
 
