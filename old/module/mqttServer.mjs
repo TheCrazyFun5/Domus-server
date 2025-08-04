@@ -12,7 +12,7 @@ export async function startMQTTServer(MQTTConfig) {
       if (valid) {
         callback(null, true);
       } else {
-        logger(`❌ Попытка подключения была отклонена для ${client.id}`, "MQTT");
+        logger.log(`❌ Попытка подключения была отклонена для ${client.id}`, "MQTT");
         callback(new Error("Authentication failed"), false);
       }
     },
@@ -20,16 +20,16 @@ export async function startMQTTServer(MQTTConfig) {
   const mqttServer = net.createServer(aedes.handle);
 
   mqttServer.listen(MQTTConfig.port, () => {
-    logger(`🚀 MQTT брокер запущен на порту ${MQTTConfig.port}`, "MQTT");
+    logger.log(`🚀 MQTT брокер запущен на порту ${MQTTConfig.port}`, "MQTT");
   });
 
   aedes.on("clientReady", (client) => {
-    logger(`🔌 Клиент подключился: ${client.id}`, "MQTT");
+    logger.log(`🔌 Клиент подключился: ${client.id}`, "MQTT");
   });
 
   aedes.on("publish", (packet, client) => {
     if (client) {
-      logger(`📨 Сообщение от ${client.id}: ${packet.topic} = ${packet.payload}`, "MQTT");
+      logger.log(`📨 Сообщение от ${client.id}: ${packet.topic} = ${packet.payload}`, "MQTT");
     }
   });
   aedesInstance = aedes;

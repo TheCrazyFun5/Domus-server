@@ -19,11 +19,29 @@ function initLogger() {
 }
 
 function log(message, name = "express") {
+  sendLogger(`[INFO] [${name}] ${message}`);
+}
+
+function err(message, name = "exxpres") {
+  sendLogger(`[ERROR] [${name}] ${message}`);
+}
+
+function war(message, name = "exxpres") {
+  sendLogger(`[WARN] [${name}] ${message}`);
+}
+
+const logger = {
+  log: log,
+  error: err,
+  warn: war,
+};
+
+function sendLogger(str) {
   const date = new Date();
   const timestamp = `${date.getDate() <= 9 ? "0" + date.getDate() : date.getDate()}.${
     date.getMonth() + 1 <= 9 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1
   }.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
-  const fullMessage = `[${timestamp}] [${name}] ${message}\n`;
+  const fullMessage = `[${timestamp}] ${str}\n`;
   process.stdout.write(fullMessage);
   if (logFile) logFile.write(fullMessage);
   else {
@@ -32,4 +50,4 @@ function log(message, name = "express") {
   }
 }
 
-export default log;
+export default logger;

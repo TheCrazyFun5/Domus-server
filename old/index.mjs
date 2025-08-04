@@ -1,9 +1,9 @@
 import express from "express";
-import logger from "./module/logger.mjs";
-import { startMQTTServer } from "./module/mqttServer.mjs";
+import logger from "../module/logger.mjs";
+import { startMQTTServer } from "../module/mqttServer.mjs";
 import installer from "./install/install.mjs";
 import { app, MQTTconnect } from "./app.mjs";
-import { exists, getMainConfig } from "./module/configLoader.mjs";
+import { exists, getMainConfig } from "../module/configLoader.mjs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -24,13 +24,13 @@ async function startApp() {
       ip: "0.0.0.0",
       port: 3000,
     };
-    logger("🛠 Конфиг не найден, запускаем установщик", "Installer");
+    logger.warn("🛠 Конфиг не найден, запускаем установщик", "Installer");
     appStart.use(installer(restartApp));
   } else {
     config = getMainConfig();
     serverSettings = config.Server;
     if (config.MQTT.builtIn) {
-      logger("Запускаем встроенный MQTT", "App");
+      logger.log("Запускаем встроенный MQTT", "App");
       await startMQTTServer(config.MQTT);
     }
     MQTTconnect();
@@ -38,7 +38,7 @@ async function startApp() {
   }
 
   server = appStart.listen(serverSettings.port, serverSettings.ip, () => {
-    logger(`🚀 Сервер запущен на http://localhost:${serverSettings.port}`);
+    logger.log(`🚀 Сервер запущен на http://localhost:${serverSettings.port}`);
   });
   server.on("connection", (socket) => {
     connections.add(socket);
@@ -47,14 +47,14 @@ async function startApp() {
 }
 
 function restartApp() {
-  logger("Перезапуск сервера...", "App");
+  logger.log("Перезапуск сервера...", "App");
   for (const socket of connections) {
     socket.destroy();
   }
   connections.clear();
   if (server) {
     server.close(() => {
-      logger("🔴 Старый сервер остановлен", "App");
+      logger.log("🔴 Старый сервер остановлен", "App");
       setTimeout(() => startApp(), 500);
     });
   }

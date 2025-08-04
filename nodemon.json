@@ -1,5 +1,7 @@
 {
-  "delay": "10",
-  "ext": "*",
+  "delay": "100",
+  "ext": "ts,json",
+  "watch": ["src"],
+  "exec": "node --loader ts-node/esm src/index.ts",
   "ignore": ["config.json", "logs/**"]
 }

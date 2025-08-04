@@ -30,7 +30,7 @@ function getConfig(configPath) {
   try {
     return JSON.parse(readFileSync(configPath, "utf-8"));
   } catch (err) {
-    logger(`Ошибка при чтении: ${configPath}-> ${err}`, "ConfigLoader");
+    logger.error(`Ошибка при чтении: ${configPath}-> ${err}`, "ConfigLoader");
   }
 }
 function getConfigName(configPath, name) {
@@ -38,16 +38,16 @@ function getConfigName(configPath, name) {
     const temp = JSON.parse(readFileSync(configPath, "utf-8"));
     return temp[name];
   } catch (err) {
-    logger(`Ошибка при чтении: ${configPath}-> ${err}`, "ConfigLoader");
+    logger.error(`Ошибка при чтении: ${configPath}-> ${err}`, "ConfigLoader");
   }
 }
 function createConfog(configPath, config) {
-  logger(`🛠 Создаю ${configPath}`, "ConfigLoader");
+  logger.log(`🛠 Создаю ${configPath}`, "ConfigLoader");
   try {
     writeFileSync(configPath, JSON.stringify(config, null, 2), "utf-8");
-    logger("✅ файл создан", "ConfigLoader");
+    logger.log("✅ файл создан", "ConfigLoader");
   } catch (err) {
-    logger(`❌ при создании файла произошла ошибка: ${err}`, "ConfigLoader");
+    logger.error(`❌ при создании файла произошла ошибка: ${err}`, "ConfigLoader");
   }
 }
 export { exists, createConfog, getConfig, getConfigName, getMainConfig };

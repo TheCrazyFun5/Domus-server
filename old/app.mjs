@@ -20,16 +20,17 @@ async function MQTTconnect() {
       reconnectPeriod: 0,
     }
   );
+  mqttClient.on("connect", () => {
+    logger.log("Привет MQTT");
+  });
 }
-mqttClient.on("connect", () => {
-  logger("Привет MQTT");
-});
+
 app.use("/", (req, res) => {
   try {
     mqttClient.publish("home/led", "d");
     res.sendFile(path.join(__dirname, "public", "index.html"));
   } catch (err) {
-    console.log(err);
+    logger.error(err);
   }
 });
 

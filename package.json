@@ -5,14 +5,22 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "bin": "index.mjs",
+  "bin": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon",
+    "build": "npx tsc"
   },
   "dependencies": {
     "aedes": "^0.51.3",
     "express": "^5.1.0",
     "mqtt": "^5.13.1",
     "net": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.1.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }

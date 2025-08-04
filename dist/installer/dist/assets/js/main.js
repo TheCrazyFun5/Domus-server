@@ -69,7 +69,7 @@ function checkedAndSend() {
     .then((res) => {
       res.data.success
         ? alert("Успешно! Через пару секунд перезагрузится сервер")
-        : alert("На сервере возникла проблема. Проверьте лог-файл.");
+        : alert(`На сервере возникла проблема. Ответ от сервера: ${res.data.text}.`);
 
       setTimeout(() => {
         PORTserver.value != 3000
@@ -77,7 +77,6 @@ function checkedAndSend() {
           : (window.location.href = "/");
       }, 1000);
     })
-
     .catch((err) => {
       alert(`Проблема с сервером: ${err}`);
     });

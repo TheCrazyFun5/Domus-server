@@ -1,0 +1,23 @@
+interface ODM_ORM {
+  getAll: () => void;
+}
+
+class orm implements ODM_ORM {
+  async getAll() {
+    await console.log("testORM");
+  }
+}
+
+class odm implements ODM_ORM {
+  getAll() {
+    console.log("ODM");
+  }
+}
+let tempConfig: string = "orm";
+
+let rep: ODM_ORM;
+
+if (tempConfig === "odm") rep = new odm();
+else rep = new orm();
+
+rep.getAll();
