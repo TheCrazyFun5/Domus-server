@@ -2,6 +2,7 @@ import express from "express";
 import logger from "./module/logger/index.js";
 import configLoader from "./module/configLoader/index.js";
 import installer from "./installer/index.js";
+// import BD from "./module/BD/index.js";
 import { app } from "./app/app.js";
 
 let server: any;
@@ -11,14 +12,20 @@ let configServer!: {
   port: number;
 };
 
-function startupSnapshot() {
+async function startupSnapshot() {
   const appStart = express();
   appStart.use(express.json());
   if (configLoader.main.config) {
     configServer = configLoader.main.config.Server;
+    // console.log(BD.BDconfig);
+    let bdt = await import("./module/BD/index.js");
+    let db = bdt.default;
+    await db.connection();
     appStart.use(app);
   } else {
     logger.app.warn("🛠 Конфиг не найден, запускаем установщик", "Installer");
+    // await BD.connection();
+    // console.log(await BD.user.findAll());
     configServer = {
       ip: "0.0.0.0",
       port: 3000,
@@ -42,7 +49,7 @@ function restartApp(): void {
   if (server) {
     server.close(() => {
       logger.app.log("🔴 Старый сервер остановлен", "App");
-      setTimeout(() => startupSnapshot(), 500);
+      setTimeout(() => startupSnapshot(), 2000);
     });
   }
 }

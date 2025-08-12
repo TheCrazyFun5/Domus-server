@@ -29,7 +29,7 @@ class configLoader<T> {
     }
   }
 
-  UpConfig(config: T): boolean {
+  async UpConfig(config: T): Promise<boolean> {
     logger.app.log(`🛠 Создаю ${this.pathConfig}`, "ConfigLoader");
     try {
       writeFileSync(this.pathConfig, JSON.stringify(config, null, 2), "utf-8");

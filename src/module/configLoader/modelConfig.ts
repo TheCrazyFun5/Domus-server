@@ -5,14 +5,15 @@ interface AppConfig {
   };
   BD: {
     ip: string;
-    port: string | number;
+    port: number;
     login: string;
     pass: string;
+    BDname: string;
   };
   MQTT: {
     builtIn: boolean;
     ip: string;
-    port: string | number;
+    port: number;
     login: string;
     pass: string;
   };

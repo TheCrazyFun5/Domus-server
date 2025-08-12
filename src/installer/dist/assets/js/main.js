@@ -5,6 +5,7 @@ const IPbdServer = document.getElementById("IPbdServer");
 const PORTbdServer = document.getElementById("PORTbdServer");
 const BDlogin = document.getElementById("BDlogin");
 const BDpass = document.getElementById("BDpass");
+const BDname = document.getElementById("BDname");
 
 const MQTTport = document.getElementById("MQTTport");
 const MQTTlogin = document.getElementById("MQTTlogin");
@@ -33,6 +34,7 @@ function checkedAndSend() {
   if (!PORTbdServer.value || PORTbdServer.value < 1 || PORTbdServer.value > 65535)
     return alert("[база данных] Порт должен быть числом от 1 до 65535");
   if (BDlogin.value.length < 3) return alert("[база данных] Логин должен содержать минимум 3 символа");
+  if (BDname.value.length < 3) return alert("[база данных] Название таблицы должен содержать минимум 3 символа");
 
   if (!MQTTport.value || MQTTport.value < 1 || MQTTport.value > 65535)
     return alert("[MQTT] Порт должен быть числом от 1 до 65535");
@@ -54,6 +56,7 @@ function checkedAndSend() {
         port: PORTbdServer.value,
         login: BDlogin.value,
         pass: BDpass.value,
+        BDname: BDname.value,
       },
       MQTT: {
         builtIn: mqttCheckBox.checked ? true : false,
