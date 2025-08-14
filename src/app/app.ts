@@ -1,18 +1,18 @@
 import express from "express";
 import path from "path";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-import BD from "../module/BD/index.js";
+const __dirname = import.meta.dirname;
+import router from "./router/index.js";
+import { User } from "../module/BD/model//user.model.js";
+import UserDTO from "./dto/userDto.js";
 const app = express.Router();
+setTimeout(async () => {
+  //   await User.create({ firstName: "d", lastName: "test" });
+  let user = await User.findOne({ where: { id: 1 } });
+  let userDto = new UserDTO(user?.dataValues);
+  console.log("No UserDto:", user?.dataValues);
+  console.log("UserDto:", { ...userDto });
+}, 3000);
 
-app.use("/", async (req, res) => {
-  try {
-    console.log(await BD.user.findAll());
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-  } catch (err) {
-    console.log(err);
-  }
-});
-
+app.use(express.static(path.join(__dirname, "public")));
+app.use(router);
 export { app };

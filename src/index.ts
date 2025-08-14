@@ -2,7 +2,6 @@ import express from "express";
 import logger from "./module/logger/index.js";
 import configLoader from "./module/configLoader/index.js";
 import installer from "./installer/index.js";
-// import BD from "./module/BD/index.js";
 import { app } from "./app/app.js";
 
 let server: any;
@@ -17,15 +16,13 @@ async function startupSnapshot() {
   appStart.use(express.json());
   if (configLoader.main.config) {
     configServer = configLoader.main.config.Server;
-    // console.log(BD.BDconfig);
     let bdt = await import("./module/BD/index.js");
-    let db = bdt.default;
-    await db.connection();
+    // await bdt.init();
+    let db = bdt.connection;
+    await db();
     appStart.use(app);
   } else {
     logger.app.warn("🛠 Конфиг не найден, запускаем установщик", "Installer");
-    // await BD.connection();
-    // console.log(await BD.user.findAll());
     configServer = {
       ip: "0.0.0.0",
       port: 3000,
