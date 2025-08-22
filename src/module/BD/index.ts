@@ -59,7 +59,6 @@ async function connection(): Promise<void> {
     await sequelize.authenticate();
     logger.bd.log("Успешное подключение к БД, начинаю синхронизацию моделей.");
     await sequelize.sync({ alter: true });
-
     logger.bd.log(`Процесс синхронизации моделей прошёл успешно.`);
   } catch (error) {
     logger.bd.error(`Ошибка подключения: ${error}`);
