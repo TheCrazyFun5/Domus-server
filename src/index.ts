@@ -3,8 +3,6 @@ import logger from "./module/logger/index.js";
 import configLoader from "./module/configLoader/index.js";
 import installer from "./installer/index.js";
 import { app } from "./app/app.js";
-import { User } from "./module/BD/model/user.model.js";
-import userService from "./app/service/userService.js";
 
 let server: any;
 let connections = new Set<any>();
@@ -19,12 +17,15 @@ async function startupSnapshot() {
   appStart.use(express.json());
   if (configLoader.main.config) {
     configServer = configLoader.main.config.Server;
-    let bdt = await import("./module/BD/index.js");
-    let db = bdt.connection;
+    const db = (await import("./module/BD/index.js")).connection;
+    const User = (await import("./module/BD/model/user.model.js")).User;
+    const userService = (await import("./app/service/userService.js")).default;
     await db();
     try {
-      if (await User.findOne({ where: { id: 1 } })) return;
-      await userService.registration("root", "root", "admin");
+      if ((await User.findAll()).length <= 0) {
+        const userDefault = configLoader.main.config.admin;
+        await userService.registration(userDefault.login, userDefault.pass, "admin");
+      }
     } catch (e: any) {
       logger.bd.error(e);
     }

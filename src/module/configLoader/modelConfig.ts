@@ -20,5 +20,9 @@ interface AppConfig {
   JWT: {
     secretKey: string;
   };
+  admin: {
+    login: string;
+    pass: string;
+  };
 }
 export { AppConfig };

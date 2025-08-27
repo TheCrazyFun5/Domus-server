@@ -15,6 +15,9 @@ const mqttCheckBox = document.getElementById("MQTTcheckbox");
 
 const JWTkay = document.getElementById("JWTkay");
 
+const userLogin = document.getElementById("userLogin");
+const userPass = document.getElementById("userPass");
+
 mqttCheckBox.addEventListener("change", function () {
   if (this.checked) {
     MQTTip.setAttribute("disabled", "disabled");
@@ -45,6 +48,9 @@ function checkedAndSend() {
 
   if (JWTkay.value.length < 20) return alert("[JWT] Секретный ключ должен содержать минимум 20 символов");
 
+  if (userLogin.value.length < 4) return alert("[user root] Логин должен содержать минимум 4 символов");
+  if (userPass.value.length < 6) return alert("[user root] Пароль должен содержать минимум 6 символов");
+
   axios
     .post("/setup", {
       Server: {
@@ -67,6 +73,10 @@ function checkedAndSend() {
       },
       JWT: {
         secretKey: JWTkay.value,
+      },
+      admin: {
+        login: userLogin.value,
+        pass: userPass.value,
       },
     })
     .then((res) => {

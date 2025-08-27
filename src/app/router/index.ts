@@ -5,7 +5,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import api from "./api.js";
 const router = express.Router();
-
 router.use("/api", api);
 router.use("/", async (req, res) => {
   try {

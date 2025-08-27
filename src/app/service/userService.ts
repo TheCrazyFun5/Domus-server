@@ -2,6 +2,7 @@ import { User } from "../../module/BD/model/user.model.js";
 import logger from "../../module/logger/index.js";
 import errorApi from "./errorService.js";
 import bcrypt from "bcryptjs";
+import tokenService from "./tokenService.js";
 
 const saltbcrypt = await bcrypt.genSalt(10);
 class userService {
@@ -13,6 +14,13 @@ class userService {
     return user;
   }
 
-  async login() {}
+  async login(login: string, pass: string) {
+    const user = await User.findOne({ where: { login: login } });
+    if (user) {
+      if (await bcrypt.compare(pass, user.pass)) {
+        return await tokenService.createdToken(user.id, user.login);
+      }
+    }
+  }
 }
 export default new userService();

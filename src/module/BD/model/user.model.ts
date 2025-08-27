@@ -2,6 +2,7 @@ import { Model, DataTypes, Sequelize } from "sequelize";
 import { sequelize } from "../index.js";
 
 export class User extends Model {
+  declare id: number;
   declare login: string;
   declare pass: string;
   declare role: String;
