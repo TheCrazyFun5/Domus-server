@@ -14,6 +14,8 @@ const MQTTip = document.getElementById("MQTTip");
 const mqttCheckBox = document.getElementById("MQTTcheckbox");
 
 const JWTkay = document.getElementById("JWTkay");
+let token;
+const JWTTextarea = document.getElementById("JWTTextarea");
 
 const userLogin = document.getElementById("userLogin");
 const userPass = document.getElementById("userPass");
@@ -25,7 +27,13 @@ mqttCheckBox.addEventListener("change", function () {
     MQTTip.removeAttribute("disabled");
   }
 });
-
+function generatorJWT() {
+  axios.get("/generatorJWT").then((req) => {
+    token = req.data;
+    JWTTextarea.value = JSON.stringify(token, null, 2);
+    JWTTextarea.rows = "10";
+  });
+}
 function checkedAndSend() {
   const ipRegex =
     /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -46,7 +54,7 @@ function checkedAndSend() {
   if (MQTTpass.value.length < 6) return alert("[MQTT] Пароль должен содержать минимум 6 символов");
   if (!ipRegex.test(MQTTip.value)) return alert("[MQTT] Неверный IP-адрес! Пример: 192.168.1.1");
 
-  if (JWTkay.value.length < 20) return alert("[JWT] Секретный ключ должен содержать минимум 20 символов");
+  if (!token) return alert("[JWT] сгенерируйте секретные ключи JWT");
 
   if (userLogin.value.length < 4) return alert("[user root] Логин должен содержать минимум 4 символов");
   if (userPass.value.length < 6) return alert("[user root] Пароль должен содержать минимум 6 символов");
@@ -71,9 +79,7 @@ function checkedAndSend() {
         login: MQTTlogin.value,
         pass: MQTTpass.value,
       },
-      JWT: {
-        secretKey: JWTkay.value,
-      },
+      JWT: token,
       admin: {
         login: userLogin.value,
         pass: userPass.value,

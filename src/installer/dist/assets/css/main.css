@@ -109,3 +109,27 @@ body {
   font-size: 17px;
   background: linear-gradient(135deg, #9367d1 0%, #d167bf 100%);
 }
+.inputPanel__inputContainer > textarea {
+  width: calc(100% - 10px);
+  resize: none;
+  padding: 6px 3px;
+  height: max-content;
+  font-size: 14px;
+}
+
+.button {
+  cursor: pointer;
+  color: #f3f4f8;
+  font-family: "InterBold";
+  border: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-size: 14px;
+  background: linear-gradient(135deg, #9367d1 0%, #d167bf 100%);
+}
+.display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}

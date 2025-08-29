@@ -1,8 +1,7 @@
 import express from "express";
 import logger from "./module/logger/index.js";
 import configLoader from "./module/configLoader/index.js";
-import installer from "./installer/index.js";
-import { app } from "./app/app.js";
+// import crypto from "crypto";
 
 let server: any;
 let connections = new Set<any>();
@@ -20,6 +19,7 @@ async function startupSnapshot() {
     const db = (await import("./module/BD/index.js")).connection;
     const User = (await import("./module/BD/model/user.model.js")).User;
     const userService = (await import("./app/service/userService.js")).default;
+    const app = (await import("./app/app.js")).app;
     await db();
     try {
       if ((await User.findAll()).length <= 0) {
@@ -32,6 +32,7 @@ async function startupSnapshot() {
     appStart.use(app);
   } else {
     logger.app.warn("🛠 Конфиг не найден, запускаем установщик", "Installer");
+    const installer = (await import("./installer/index.js")).default;
     configServer = {
       ip: "0.0.0.0",
       port: 3000,

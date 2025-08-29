@@ -1,6 +1,7 @@
 import configLoader from "../module/configLoader/index.js";
 import logger from "../module/logger/index.js";
 import { Request, Response } from "express";
+import crypto from "crypto";
 class InstallController {
   callBack: () => void;
   constructor(callBack: () => void) {
@@ -16,6 +17,17 @@ class InstallController {
     } catch (err) {
       logger.app.error(err);
       res.json({ success: false });
+    }
+  }
+  async generatorJWT(req: Request, res: Response) {
+    try {
+      const token = {
+        accessSecretKey: crypto.randomBytes(64).toString("hex"),
+        refreshSecretKey: crypto.randomBytes(64).toString("hex"),
+      };
+      res.status(200).json(token);
+    } catch (err) {
+      logger.app.error(err);
     }
   }
 }

@@ -84,12 +84,12 @@
         </div>
 
         <div class="content__settings__container">
-          <h2 class="settings__container-title">JWT</h2>
+          <h2 class="settings__container-title">Секретные ключи JWT</h2>
 
           <div class="settings__container__inputPanel">
-            <div class="inputPanel__inputContainer">
-              <h3 class="inputPanel__inputContainer__title">Секретный ключ</h3>
-              <input id="JWTkay" class="inputPanel__inputContainer-input" value="" type="text" />
+            <div class="inputPanel__inputContainer display">
+              <textarea rows="1" disabled placeholder="ключи" id="JWTTextarea"></textarea>
+              <button style="margin: 0 auto" class="button" onclick="generatorJWT()">Генерировать</button>
             </div>
           </div>
         </div>

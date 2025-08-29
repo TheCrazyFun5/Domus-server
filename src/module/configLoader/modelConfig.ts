@@ -18,7 +18,8 @@ interface AppConfig {
     pass: string;
   };
   JWT: {
-    secretKey: string;
+    accessSecretKey: string;
+    refreshSecretKey: string;
   };
   admin: {
     login: string;
