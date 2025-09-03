@@ -21,6 +21,7 @@ class userService {
         return await tokenService.createdToken(user.id, user.login);
       }
     }
+    throw errorApi.badRequest("Неверный логин или пароль");
   }
 }
 export default new userService();

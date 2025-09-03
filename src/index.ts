@@ -1,6 +1,7 @@
 import express from "express";
 import logger from "./module/logger/index.js";
 import configLoader from "./module/configLoader/index.js";
+import cors from "cors";
 // import crypto from "crypto";
 
 let server: any;
@@ -29,6 +30,7 @@ async function startupSnapshot() {
     } catch (e: any) {
       logger.bd.error(e);
     }
+    appStart.use(cors());
     appStart.use(app);
   } else {
     logger.app.warn("🛠 Конфиг не найден, запускаем установщик", "Installer");
