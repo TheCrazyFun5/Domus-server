@@ -4,21 +4,26 @@ import configLoader from "../configLoader/index.js";
 import fs from "fs";
 import path from "path";
 import { pathToFileURL } from "url";
+import { dbData } from "../../module/configLoader/modelConfig.js";
 
-const dataBD = configLoader.main.config!.BD;
-const sequelize = new Sequelize(dataBD.BDname, dataBD.login, dataBD.pass, {
-  host: dataBD.ip,
-  port: dataBD.port,
-  dialect: "mysql",
-  logging: false,
-});
+let sequelize: Sequelize | null = null;
+async function CreateSequelize(dbData?: dbData) {
+  const dataDB = dbData ? dbData : configLoader.main.config!.BD;
+  return new Sequelize(dataDB.dbName, dataDB.login, dataDB.pass, {
+    host: dataDB.ip,
+    port: dataDB.port,
+    dialect: "mysql",
+    logging: false,
+  });
+}
 
-async function init(): Promise<void> {
+async function init(s: Sequelize): Promise<void> {
   try {
     const dirModel = path.join(import.meta.dirname, "/model");
     logger.bd.log("Начало инициализации моделей базы данных.");
     for (const file of fs.readdirSync(dirModel).filter((file) => file.includes(".model."))) {
-      await import(pathToFileURL(path.join(dirModel, file)).href);
+      const test = await import(pathToFileURL(path.join(dirModel, file)).href);
+      test.init(s);
       logger.bd.log(`Модель ${file} инициализирована`);
     }
   } catch (err) {
@@ -26,15 +31,18 @@ async function init(): Promise<void> {
   }
 }
 
-async function connection(): Promise<void> {
+async function connection(dbData?: dbData): Promise<void | {}> {
   try {
-    await init();
+    if (sequelize) sequelize.close();
+    sequelize = await CreateSequelize(dbData);
+    await init(sequelize);
     await sequelize.authenticate();
     logger.bd.log("Успешное подключение к БД, начинаю синхронизацию моделей.");
     await sequelize.sync({ alter: true });
     logger.bd.log(`Процесс синхронизации моделей прошёл успешно.`);
   } catch (error) {
     logger.bd.error(`Ошибка подключения: ${error}`);
+    return { error };
   }
 }
 

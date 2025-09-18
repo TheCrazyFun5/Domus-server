@@ -10,6 +10,8 @@ export default (callBack: () => void) => {
   const installer = express.Router();
   installer.use(express.static(path.join(__dirname, "dist")));
   installer.post("/setup", insstallController.Setup.bind(insstallController));
+  installer.post("/dbConnect", insstallController.dbConnect);
+  installer.post("/save", insstallController.Save.bind(insstallController));
   installer.get("/generatorJWT", insstallController.generatorJWT);
   installer.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "dist", "index.html"));

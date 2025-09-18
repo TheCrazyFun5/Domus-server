@@ -1,15 +1,17 @@
+interface dbData {
+  dms: string;
+  ip: string;
+  port: number;
+  login: string;
+  pass: string;
+  dbName: string;
+}
+
 interface AppConfig {
   Server: {
-    ip: string;
     port: number;
   };
-  BD: {
-    ip: string;
-    port: number;
-    login: string;
-    pass: string;
-    BDname: string;
-  };
+  BD: dbData;
   MQTT: {
     builtIn: boolean;
     ip: string;
@@ -21,9 +23,5 @@ interface AppConfig {
     accessSecretKey: string;
     refreshSecretKey: string;
   };
-  admin: {
-    login: string;
-    pass: string;
-  };
 }
-export { AppConfig };
+export { AppConfig, dbData };

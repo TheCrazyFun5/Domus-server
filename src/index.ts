@@ -15,22 +15,16 @@ let configServer!: {
 async function startupSnapshot() {
   const appStart = express();
   appStart.use(express.json());
+  appStart.use(cors());
   if (configLoader.main.config) {
-    configServer = configLoader.main.config.Server;
+    configServer = {
+      ip: "0.0.0.0",
+      port: configLoader.main.config.Server.port,
+    };
     const db = (await import("./module/BD/index.js")).connection;
-    const User = (await import("./module/BD/model/user.model.js")).User;
-    const userService = (await import("./app/service/userService.js")).default;
     const app = (await import("./app/app.js")).app;
     await db();
-    try {
-      if ((await User.findAll()).length <= 0) {
-        const userDefault = configLoader.main.config.admin;
-        await userService.registration(userDefault.login, userDefault.pass, "admin");
-      }
-    } catch (e: any) {
-      logger.bd.error(e);
-    }
-    appStart.use(cors());
+
     appStart.use(app);
   } else {
     logger.app.warn("🛠 Конфиг не найден, запускаем установщик", "Installer");
@@ -50,14 +44,14 @@ async function startupSnapshot() {
   });
 }
 function restartApp(): void {
-  logger.app.log("Перезапуск сервера...", "App");
+  logger.app.log("Перезапуск сервера...");
   for (const socket of connections) {
     socket.destroy();
   }
   connections.clear();
   if (server) {
     server.close(() => {
-      logger.app.log("🔴 Старый сервер остановлен", "App");
+      logger.app.log("🔴 Старый сервер остановлен");
       setTimeout(() => startupSnapshot(), 2000);
     });
   }

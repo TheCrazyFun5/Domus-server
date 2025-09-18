@@ -6,11 +6,11 @@ import tokenService from "./tokenService.js";
 
 const saltbcrypt = await bcrypt.genSalt(10);
 class userService {
-  async registration(login: string, pass: string, role = "user") {
+  async registration(login: string, pass: string, role = "user", mail: string | null = null) {
     const check = await User.findOne({ where: { login: login } });
     if (check) throw errorApi.badRequest(`Пользователь с логином ${login} существует`);
     const hashPass = await bcrypt.hash(pass, saltbcrypt);
-    const user = User.create({ login: login, pass: hashPass, role: role });
+    const user = User.create({ login: login, pass: hashPass, role: role, mail: mail });
     return user;
   }
 
