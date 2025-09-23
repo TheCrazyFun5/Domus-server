@@ -23,5 +23,9 @@ class userService {
     }
     throw errorApi.badRequest("Неверный логин или пароль");
   }
+  async updatAaccessToken(refreshToken: string) {
+    const Payload = await tokenService.validRefreshToken(refreshToken);
+    return await tokenService.createdToken(Payload.userId, Payload.login);
+  }
 }
 export default new userService();

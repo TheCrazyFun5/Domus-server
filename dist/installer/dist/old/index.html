@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Installer Domus</title>
+    <link rel="stylesheet" href="./assets/css/clear.css" />
+    <link rel="stylesheet" href="./assets/css/fonts.css" />
+    <link rel="stylesheet" href="./assets/css/main.css" />
+    <script src="./assets/js/axios.min.js"></script>
+  </head>
+  <body>
+    <div class="content">
+      <h1 class="content-h1">Настройки сервера <span>Domus</span></h1>
+
+      <div class="content__settings">
+        <div class="content__settings__container">
+          <h2 class="settings__container-title">Веб-сервер</h2>
+
+          <div class="settings__container__inputPanel">
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">IP-адрес</h3>
+              <input id="IPserver" class="inputPanel__inputContainer-input" value="0.0.0.0" type="text" />
+            </div>
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">Порт веб сервера</h3>
+              <input id="PORTserver" class="inputPanel__inputContainer-input" value="3000" type="number" />
+            </div>
+          </div>
+        </div>
+
+        <div class="content__settings__container">
+          <h2 class="settings__container-title">База данных<br /><span>(только MySql)</span></h2>
+
+          <div class="settings__container__inputPanel">
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">IP-адрес</h3>
+              <input id="IPbdServer" class="inputPanel__inputContainer-input" value="0.0.0.0" type="text" />
+            </div>
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">Порт</h3>
+              <input id="PORTbdServer" class="inputPanel__inputContainer-input" value="3306" type="number" />
+            </div>
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">Логин</h3>
+              <input id="BDlogin" class="inputPanel__inputContainer-input" value="root" type="text" />
+            </div>
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">Пароль</h3>
+              <input id="BDpass" class="inputPanel__inputContainer-input" value="" type="password" />
+            </div>
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">Название таблицы</h3>
+              <input id="BDname" class="inputPanel__inputContainer-input" value="" type="text" />
+            </div>
+          </div>
+        </div>
+
+        <div class="content__settings__container">
+          <h2 class="settings__container-title">MQTT</h2>
+
+          <div class="settings__container__inputPanel">
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">Порт</h3>
+              <input id="MQTTport" class="inputPanel__inputContainer-input" value="1883" type="number" />
+            </div>
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">Логин</h3>
+              <input id="MQTTlogin" class="inputPanel__inputContainer-input" value="admin" type="text" />
+            </div>
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">Пароль</h3>
+              <input id="MQTTpass" class="inputPanel__inputContainer-input" value="123123" type="password" />
+            </div>
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">IP-адрес</h3>
+              <input id="MQTTip" class="inputPanel__inputContainer-input" disabled value="0.0.0.0" type="text" />
+            </div>
+            <label class="inputPanel__inputContainer__checkbox">
+              <input class="inputPanel__inputContainer-checkbox" checked type="checkbox" id="MQTTcheckbox" />
+              Встроенный MQTT брокер
+            </label>
+          </div>
+        </div>
+
+        <div class="content__settings__container">
+          <h2 class="settings__container-title">Секретные ключи JWT</h2>
+
+          <div class="settings__container__inputPanel">
+            <div class="inputPanel__inputContainer display">
+              <textarea rows="1" disabled placeholder="ключи" id="JWTTextarea"></textarea>
+              <button style="margin: 0 auto" class="button" onclick="generatorJWT()">Генерировать</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="content__settings__container">
+          <h2 class="settings__container-title">root user</h2>
+
+          <div class="settings__container__inputPanel">
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">Логин</h3>
+              <input id="userLogin" class="inputPanel__inputContainer-input" value="" type="text" />
+            </div>
+            <div class="inputPanel__inputContainer">
+              <h3 class="inputPanel__inputContainer__title">Пароль</h3>
+              <input id="userPass" class="inputPanel__inputContainer-input" value="" type="password" />
+            </div>
+          </div>
+        </div>
+        <button onclick="checkedAndSend()" class="saveButton">Сохранить</button>
+      </div>
+    </div>
+    <script src="./assets/js/main.js"></script>
+  </body>
+</html>

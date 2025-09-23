@@ -13,7 +13,29 @@ class userController {
       const user = req.body;
       if (!user || !user.login || !user.pass) throw errorApi.badRequest("Нет нужных данных");
       const token = await userService.login(user.login, user.pass);
-      if (token) return res.status(200).json(token);
+      if (token) {
+        res.cookie("refreshToken", token.refreshToken, {
+          maxAge: 2 * 24 * 60 * 60 * 1000,
+          // httpOnly: true,
+          sameSite: "lax",
+          secure: true,
+        });
+        return res.status(200).json(token);
+      }
+    } catch (err) {
+      err instanceof errorApi
+        ? res.status(err.status).json(err.message)
+        : res.status(500).json("Мой код решил, что сегодня выходной.");
+      logger.express.error(err);
+    }
+  }
+  async updatAaccessToken(req: Request, res: Response) {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) throw errorApi.unauthorized("нет refreshToken");
+      const token = await userService.updatAaccessToken(refreshToken);
+      res.cookie("refreshToken", token.refreshToken, { maxAge: 2 * 24 * 60 * 60 * 1000, httpOnly: true });
+      res.status(200).json(token);
     } catch (err) {
       err instanceof errorApi
         ? res.status(err.status).json(err.message)

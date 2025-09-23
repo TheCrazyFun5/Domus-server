@@ -5,6 +5,7 @@ const IPbdServer = document.getElementById("IPbdServer");
 const PORTbdServer = document.getElementById("PORTbdServer");
 const BDlogin = document.getElementById("BDlogin");
 const BDpass = document.getElementById("BDpass");
+const BDname = document.getElementById("BDname");
 
 const MQTTport = document.getElementById("MQTTport");
 const MQTTlogin = document.getElementById("MQTTlogin");
@@ -13,6 +14,11 @@ const MQTTip = document.getElementById("MQTTip");
 const mqttCheckBox = document.getElementById("MQTTcheckbox");
 
 const JWTkay = document.getElementById("JWTkay");
+let token;
+const JWTTextarea = document.getElementById("JWTTextarea");
+
+const userLogin = document.getElementById("userLogin");
+const userPass = document.getElementById("userPass");
 
 mqttCheckBox.addEventListener("change", function () {
   if (this.checked) {
@@ -21,7 +27,13 @@ mqttCheckBox.addEventListener("change", function () {
     MQTTip.removeAttribute("disabled");
   }
 });
-
+function generatorJWT() {
+  axios.get("/generatorJWT").then((req) => {
+    token = req.data;
+    JWTTextarea.value = JSON.stringify(token, null, 2);
+    JWTTextarea.rows = "10";
+  });
+}
 function checkedAndSend() {
   const ipRegex =
     /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -33,6 +45,7 @@ function checkedAndSend() {
   if (!PORTbdServer.value || PORTbdServer.value < 1 || PORTbdServer.value > 65535)
     return alert("[база данных] Порт должен быть числом от 1 до 65535");
   if (BDlogin.value.length < 3) return alert("[база данных] Логин должен содержать минимум 3 символа");
+  if (BDname.value.length < 3) return alert("[база данных] Название таблицы должен содержать минимум 3 символа");
 
   if (!MQTTport.value || MQTTport.value < 1 || MQTTport.value > 65535)
     return alert("[MQTT] Порт должен быть числом от 1 до 65535");
@@ -41,7 +54,10 @@ function checkedAndSend() {
   if (MQTTpass.value.length < 6) return alert("[MQTT] Пароль должен содержать минимум 6 символов");
   if (!ipRegex.test(MQTTip.value)) return alert("[MQTT] Неверный IP-адрес! Пример: 192.168.1.1");
 
-  if (JWTkay.value.length < 20) return alert("[JWT] Секретный ключ должен содержать минимум 20 символов");
+  if (!token) return alert("[JWT] сгенерируйте секретные ключи JWT");
+
+  if (userLogin.value.length < 4) return alert("[user root] Логин должен содержать минимум 4 символов");
+  if (userPass.value.length < 6) return alert("[user root] Пароль должен содержать минимум 6 символов");
 
   axios
     .post("/setup", {
@@ -54,6 +70,7 @@ function checkedAndSend() {
         port: PORTbdServer.value,
         login: BDlogin.value,
         pass: BDpass.value,
+        BDname: BDname.value,
       },
       MQTT: {
         builtIn: mqttCheckBox.checked ? true : false,
@@ -62,8 +79,10 @@ function checkedAndSend() {
         login: MQTTlogin.value,
         pass: MQTTpass.value,
       },
-      JWT: {
-        secretKey: JWTkay.value,
+      JWT: token,
+      admin: {
+        login: userLogin.value,
+        pass: userPass.value,
       },
     })
     .then((res) => {

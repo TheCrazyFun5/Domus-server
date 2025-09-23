@@ -1,6 +1,7 @@
 import express from "express";
 import logger from "./module/logger/index.js";
 import configLoader from "./module/configLoader/index.js";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 // import crypto from "crypto";
 
@@ -15,7 +16,13 @@ let configServer!: {
 async function startupSnapshot() {
   const appStart = express();
   appStart.use(express.json());
-  appStart.use(cors());
+  appStart.use(cookieParser());
+  appStart.use(
+    cors({
+      origin: "http://localhost:5173",
+      credentials: true,
+    })
+  );
   if (configLoader.main.config) {
     configServer = {
       ip: "0.0.0.0",
@@ -31,7 +38,7 @@ async function startupSnapshot() {
     const installer = (await import("./installer/index.js")).default;
     configServer = {
       ip: "0.0.0.0",
-      port: 3000,
+      port: 2302,
     };
     appStart.use(installer(restartApp));
   }

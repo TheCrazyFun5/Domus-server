@@ -1,4 +1,4 @@
-import { accessSync, constants, readFileSync } from "fs";
+import { accessSync, constants, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import logger from "../logger/index.js";
 class configLoader {
@@ -27,5 +27,19 @@ class configLoader {
             logger.app.error(`Ошибка при чтении: ${this.pathConfig} -> ${err}`, "ConfigLoader");
         }
     }
+    async UpConfig(config) {
+        logger.app.log(`🛠 Создаю ${this.pathConfig}`, "ConfigLoader");
+        try {
+            writeFileSync(this.pathConfig, JSON.stringify(config, null, 2), "utf-8");
+            logger.app.log("✅ файл создан", "ConfigLoader");
+            this.getConfig();
+            return true;
+        }
+        catch (err) {
+            logger.app.error(`❌ при создании файла произошла ошибка: ${err}`, "ConfigLoader");
+            return false;
+        }
+    }
 }
 export { configLoader };
+//# sourceMappingURL=configLoader.js.map

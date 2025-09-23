@@ -9,7 +9,6 @@ class Logger {
     constructor(name) {
         this.logsDir = path.join(rootDir, name);
         this.logFileName = path.join(this.logsDir, `${this.date()}.log`);
-        console.log(this.logFileName);
         this.name = name;
         this.init();
     }
@@ -47,3 +46,4 @@ class Logger {
     }
 }
 export default Logger;
+//# sourceMappingURL=logger.js.map

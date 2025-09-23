@@ -1,21 +1,36 @@
 import express from "express";
 import logger from "./module/logger/index.js";
 import configLoader from "./module/configLoader/index.js";
-import installer from "./installer/index.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+// import crypto from "crypto";
 let server;
 let connections = new Set();
 let configServer;
-function startupSnapshot() {
+async function startupSnapshot() {
     const appStart = express();
     appStart.use(express.json());
+    appStart.use(cookieParser());
+    appStart.use(cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+    }));
     if (configLoader.main.config) {
-        configServer = configLoader.main.config.Server;
+        configServer = {
+            ip: "0.0.0.0",
+            port: configLoader.main.config.Server.port,
+        };
+        const db = (await import("./module/BD/index.js")).connection;
+        const app = (await import("./app/app.js")).app;
+        await db();
+        appStart.use(app);
     }
     else {
         logger.app.warn("🛠 Конфиг не найден, запускаем установщик", "Installer");
+        const installer = (await import("./installer/index.js")).default;
         configServer = {
             ip: "0.0.0.0",
-            port: 3000,
+            port: 2302,
         };
         appStart.use(installer(restartApp));
     }
@@ -28,16 +43,17 @@ function startupSnapshot() {
     });
 }
 function restartApp() {
-    logger.app.log("Перезапуск сервера...", "App");
+    logger.app.log("Перезапуск сервера...");
     for (const socket of connections) {
         socket.destroy();
     }
     connections.clear();
     if (server) {
         server.close(() => {
-            logger.app.log("🔴 Старый сервер остановлен", "App");
-            setTimeout(() => startupSnapshot(), 500);
+            logger.app.log("🔴 Старый сервер остановлен");
+            setTimeout(() => startupSnapshot(), 2000);
         });
     }
 }
 startupSnapshot();
+//# sourceMappingURL=index.js.map
