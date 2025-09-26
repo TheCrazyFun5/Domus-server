@@ -18,7 +18,7 @@ async function init(s) {
     try {
         const dirModel = path.join(import.meta.dirname, "/model");
         logger.bd.log("Начало инициализации моделей базы данных.");
-        for (const file of fs.readdirSync(dirModel).filter((file) => file.includes(".model."))) {
+        for (const file of fs.readdirSync(dirModel).filter((file) => file.includes(".model.") && !file.includes(".map"))) {
             const test = await import(pathToFileURL(path.join(dirModel, file)).href);
             test.init(s);
             logger.bd.log(`Модель ${file} инициализирована`);
