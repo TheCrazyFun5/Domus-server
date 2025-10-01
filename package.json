@@ -8,7 +8,7 @@
   "bin": "index.ts",
   "scripts": {
     "dev": "nodemon",
-    "build": "npx tsc"
+    "build": "tsc"
   },
   "dependencies": {
     "aedes": "^0.51.3",

@@ -11,6 +11,7 @@ class userController {
   async login(req: Request, res: Response) {
     try {
       const user = req.body;
+      //user.Remember
       if (!user || !user.login || !user.pass) throw errorApi.badRequest("Нет нужных данных");
       const token = await userService.login(user.login, user.pass);
       if (token) {

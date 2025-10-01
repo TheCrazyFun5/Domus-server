@@ -1,0 +1,1 @@
+{"version":3,"file":"jwtModel.js","sourceRoot":"","sources":["../../src/model/jwtModel.ts"],"names":[],"mappings":"","sourcesContent":["interface JWTPayload {\r\n  userId: number;\r\n  login: string;\r\n}\r\n\r\nexport { JWTPayload };\r\n"]}

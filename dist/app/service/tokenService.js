@@ -20,6 +20,15 @@ class TokenService {
             throw errorApi.unauthorized("Токен недействительный");
         }
     }
+    async validaccessToken(token) {
+        try {
+            let verifyToken = JWT.verify(token, configLoader.main.config.JWT.accessSecretKey);
+            return verifyToken;
+        }
+        catch (err) {
+            throw errorApi.unauthorized("Токен недействительный");
+        }
+    }
 }
 export default new TokenService();
 //# sourceMappingURL=tokenService.js.map
