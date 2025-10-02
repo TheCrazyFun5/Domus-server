@@ -1,4 +1,4 @@
-import { dbData } from "../../module/configLoader/modelConfig.js";
+import { dbData } from "../../model/modelConfig.js";
 import errorApi from "../../app/service/errorService.js";
 const DMSname: string[] = ["mysql", "postgres", "mariadb", "oracle", "mssql"];
 const ipRegex =

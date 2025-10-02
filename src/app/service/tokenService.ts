@@ -2,14 +2,15 @@ import JWT from "jsonwebtoken";
 import configLoader from "../../module/configLoader/index.js";
 import errorApi from "./errorService.js";
 import { JWTPayload } from "../../model/jwtModel.js";
+import { TokenConstants } from "../../constants/token.constants.js";
 
 class TokenService {
   async createdToken(userId: number, login: string) {
     const accessToken = JWT.sign({ userId: userId, login: login }, configLoader.main.config!.JWT.accessSecretKey, {
-      expiresIn: "15m",
+      expiresIn: TokenConstants.ACCESS_TOKEN_EXPIRESIN,
     });
     const refreshToken = JWT.sign({ userId: userId, login: login }, configLoader.main.config!.JWT.refreshSecretKey, {
-      expiresIn: "2d",
+      expiresIn: TokenConstants.REFRESH_TOKEN_EXPIRESIN,
     });
     return { accessToken, refreshToken };
   }

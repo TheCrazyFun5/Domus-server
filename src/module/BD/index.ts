@@ -4,7 +4,7 @@ import configLoader from "../configLoader/index.js";
 import fs from "fs";
 import path from "path";
 import { pathToFileURL } from "url";
-import { dbData } from "../../module/configLoader/modelConfig.js";
+import { dbData } from "../../model/modelConfig.js";
 
 let sequelize: Sequelize | null = null;
 async function CreateSequelize(dbData?: dbData) {
