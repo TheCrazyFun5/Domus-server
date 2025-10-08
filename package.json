@@ -20,7 +20,8 @@
     "mqtt": "^5.13.1",
     "mysql2": "^3.14.3",
     "net": "^1.0.2",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.9",
