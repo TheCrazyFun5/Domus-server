@@ -3,6 +3,7 @@ import logger from "./module/logger/index.js";
 import configLoader from "./module/configLoader/index.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { webSocketInit } from "./module/webSocket/index.js";
 // import crypto from "crypto";
 
 let server: any;
@@ -28,6 +29,7 @@ async function startupSnapshot() {
       ip: "0.0.0.0",
       port: configLoader.main.config.Server.port,
     };
+
     const db = (await import("./module/BD/index.js")).connection;
     const app = (await import("./app/app.js")).app;
     await db();
@@ -42,9 +44,11 @@ async function startupSnapshot() {
     };
     appStart.use(installer(restartApp));
   }
+
   server = appStart.listen(configServer.port, configServer.ip, () => {
     logger.app.log(`🚀 Сервер запущен на http://localhost:${configServer.port}`);
   });
+  webSocketInit(server);
   server.on("connection", (socket: any) => {
     connections.add(socket);
     socket.on("close", () => connections.delete(socket));
