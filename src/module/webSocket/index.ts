@@ -1,3 +1,4 @@
+import { randomInt } from "crypto";
 import { Server } from "socket.io";
 let io: Server | null = null;
 
@@ -10,6 +11,10 @@ function webSocketInit(server: any) {
   });
   io.on("connection", (socket) => {
     console.log(`🟢 Подключение клиента: ${socket.id}`);
+
+    setInterval(() => {
+      socket.emit("weather", randomInt(300));
+    }, 5000);
 
     socket.on("join_room", async (roomId: string) => {
       socket.join(roomId);
