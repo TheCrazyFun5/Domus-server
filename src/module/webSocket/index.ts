@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import weatherService from "../../app/service/weatherService.js";
 let io: Server | null = null;
 
 function webSocketInit(server: any) {
@@ -10,6 +11,12 @@ function webSocketInit(server: any) {
   });
   io.on("connection", (socket) => {
     console.log(`🟢 Подключение клиента: ${socket.id}`);
+    socket.emit("weatherCurrent", weatherService.CurrentWeather);
+    setInterval(async () => {
+      const date = new Date();
+      console.log(date.getTime());
+      // if(weatherService.CurrentWeather == null || )
+    }, 1000);
 
     socket.on("join_room", async (roomId: string) => {
       socket.join(roomId);
