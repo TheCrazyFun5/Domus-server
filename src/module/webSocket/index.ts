@@ -12,15 +12,21 @@ function webSocketInit(server: any) {
   });
   io.on("connection", (socket) => {
     console.log(`🟢 Подключение клиента: ${socket.id}`);
-    socket.emit("weatherCurrent", weatherService.CurrentWeather);
+    // socket.emit("weatherCurrent", weatherService.CurrentWeather);
     setInterval(async () => {
       const date = new Date();
       console.log(date.getTime());
-      // if(weatherService.CurrentWeather == null || )
-    }, 1000);
-
-    setInterval(() => {
-      socket.emit("weather", randomInt(300));
+      if (
+        weatherService.last_updated_epoch_Current == null ||
+        weatherService.last_updated_epoch_Current * 1000 + 900000 < date.getTime()
+      ) {
+        const CurrentWeather = await weatherService.getCurrentWeather();
+        if (CurrentWeather) return socket.emit("weatherCurrent", CurrentWeather.data);
+      }
+      console.log(
+        weatherService.last_updated_epoch_Current ? weatherService.last_updated_epoch_Current * 1000 + 900000 : null
+      );
+      socket.emit("weatherCurrent", weatherService.CurrentWeather.data);
     }, 5000);
 
     socket.on("join_room", async (roomId: string) => {

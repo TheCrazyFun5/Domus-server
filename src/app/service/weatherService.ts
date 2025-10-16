@@ -11,7 +11,8 @@ class WeatherClass {
   CurrentWeather: any = null;
 
   async getCurrentWeather() {
-    const data: ApiKayAndName | null = await this.ApiKayAndName();
+    const data: null | ApiKayAndName = await this.ApiKayAndName();
+    console.log(data);
     if (data) {
       try {
         let CurrentWeather = await axios.get(
@@ -19,8 +20,10 @@ class WeatherClass {
         );
         this.CurrentWeather = CurrentWeather;
         this.last_updated_epoch_Current = CurrentWeather.data.current.last_updated_epoch;
+        console.log("ddd");
         return CurrentWeather;
       } catch (err) {
+        console.log(err);
         this.CurrentWeather = null;
         return null;
       }
@@ -29,7 +32,7 @@ class WeatherClass {
   }
 
   private async ApiKayAndName(): Promise<ApiKayAndName | null> {
-    const ApiKayAndName = await Weather.findOne({ where: { id: 0 } });
+    const ApiKayAndName = await Weather.findOne({ where: { id: 1 } });
     if (ApiKayAndName) {
       return {
         apiKay: ApiKayAndName.APIkay,
