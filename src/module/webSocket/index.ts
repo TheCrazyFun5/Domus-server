@@ -21,12 +21,12 @@ function webSocketInit(server: any) {
         weatherService.last_updated_epoch_Current * 1000 + 900000 < date.getTime()
       ) {
         const CurrentWeather = await weatherService.getCurrentWeather();
-        if (CurrentWeather) return socket.emit("weatherCurrent", CurrentWeather.data);
+        if (CurrentWeather) return socket.emit("weatherCurrent", CurrentWeather);
       }
       console.log(
         weatherService.last_updated_epoch_Current ? weatherService.last_updated_epoch_Current * 1000 + 900000 : null
       );
-      socket.emit("weatherCurrent", weatherService.CurrentWeather.data);
+      socket.emit("weatherCurrent", weatherService.CurrentWeather);
     }, 5000);
 
     socket.on("join_room", async (roomId: string) => {

@@ -11,17 +11,19 @@ class WeatherClass {
   CurrentWeather: any = null;
 
   async getCurrentWeather() {
-    const data: null | ApiKayAndName = await this.ApiKayAndName();
-    console.log(data);
+    const data: null | ApiKayAndName = {
+      apiKay: "d982a5529643435ea50185828250210",
+      cityName: "Orenburg",
+    };
     if (data) {
       try {
-        let CurrentWeather = await axios.get(
+        const CurrentWeather = await axios.get(
           `http://api.weatherapi.com/v1/current.json?key=${data.apiKay}&q=${data.cityName}&aqi=no`
         );
-        this.CurrentWeather = CurrentWeather;
+        console.log("был запрос на API");
+        this.CurrentWeather = CurrentWeather.data;
         this.last_updated_epoch_Current = CurrentWeather.data.current.last_updated_epoch;
-        console.log("ddd");
-        return CurrentWeather;
+        return CurrentWeather.data;
       } catch (err) {
         console.log(err);
         this.CurrentWeather = null;
