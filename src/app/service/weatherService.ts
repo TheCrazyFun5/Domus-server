@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Weather } from "../../module/BD/model/weather.model.js";
+import { broadcastToAll } from "../../module/webSocket/index.js";
 
 interface ApiKayAndName {
   apiKay: string;
@@ -7,6 +8,7 @@ interface ApiKayAndName {
 }
 
 class WeatherClass {
+  _intervalId: any = null;
   last_updated_epoch_Current: number | null = null;
   CurrentWeather: any = null;
 
@@ -31,6 +33,22 @@ class WeatherClass {
       }
     }
     return null;
+  }
+
+  updateAndSendToClient() {
+    if (this._intervalId) {
+      clearInterval(this._intervalId);
+      this._intervalId = null;
+    }
+    this._intervalId = setInterval(async () => {
+      const date = new Date();
+      if (this.last_updated_epoch_Current == null || this.last_updated_epoch_Current * 1000 + 900000 < date.getTime()) {
+        const CurrentWeather = await this.getCurrentWeather();
+        if (CurrentWeather) return broadcastToAll("weatherCurrent", CurrentWeather);
+      }
+      console.log(this.last_updated_epoch_Current ? this.last_updated_epoch_Current * 1000 + 900000 : null);
+      broadcastToAll("weatherCurrent", this.CurrentWeather);
+    }, 5000);
   }
 
   private async ApiKayAndName(): Promise<ApiKayAndName | null> {

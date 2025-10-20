@@ -5,6 +5,7 @@ let io: Server | null = null;
 let socketClient = new Set<Socket>();
 
 function webSocketInit(server: any) {
+  weatherService.updateAndSendToClient();
   io = new Server(server, {
     cors: {
       origin: "http://localhost:5173",
@@ -18,22 +19,6 @@ function webSocketInit(server: any) {
     socket.on("disconnect", () => {
       socketClient.delete(socket);
     });
-    // socket.emit("weatherCurrent", weatherService.CurrentWeather);
-    // setInterval(async () => {
-    //   const date = new Date();
-    //   console.log(date.getTime());
-    //   if (
-    //     weatherService.last_updated_epoch_Current == null ||
-    //     weatherService.last_updated_epoch_Current * 1000 + 900000 < date.getTime()
-    //   ) {
-    //     const CurrentWeather = await weatherService.getCurrentWeather();
-    //     if (CurrentWeather) return socket.emit("weatherCurrent", CurrentWeather.data);
-    //   }
-    //   console.log(
-    //     weatherService.last_updated_epoch_Current ? weatherService.last_updated_epoch_Current * 1000 + 900000 : null
-    //   );
-    //   socket.emit("weatherCurrent", weatherService.CurrentWeather.data);
-    // }, 5000);
 
     socket.on("join_room", async (roomId: string) => {
       socket.join(roomId);
@@ -42,11 +27,10 @@ function webSocketInit(server: any) {
     });
   });
 }
-function gg() {
-  if (socketClient) {
-    for (const item of socketClient) {
-      item.emit("weatherCurrent", "dddd");
-    }
+function broadcastToAll(to: string, msg: any) {
+  if (socketClient.size == 0) return;
+  for (const item of socketClient) {
+    item.emit(to, msg);
   }
 }
 
@@ -55,4 +39,4 @@ function getIO(): Server {
   return io;
 }
 export default getIO;
-export { webSocketInit, gg };
+export { webSocketInit, broadcastToAll };
