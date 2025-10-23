@@ -20,7 +20,7 @@ class WeatherClass {
     if (data) {
       try {
         const CurrentWeather = await axios.get(
-          `http://api.weatherapi.com/v1/current.json?key=${data.apiKay}&q=${data.cityName}&aqi=no`
+          `http://api.weatherapi.com/v1/current.json?key=${data.apiKay}&q=${data.cityName}&aqi=no&lang=ru`
         );
         console.log("был запрос на API");
         this.CurrentWeather = CurrentWeather.data;
